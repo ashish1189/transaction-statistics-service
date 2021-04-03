@@ -9,7 +9,9 @@ import java.time.temporal.ChronoUnit;
 
 public interface TransactionsService {
 
-    ResponseEntity<Void> saveTransaction(Transaction transaction);
+    ResponseEntity<Void> saveTransaction(Instant now, Transaction transaction);
+
+    ResponseEntity<Void> deleteTransactions();
 
     /**
      * Method check if transaction is older than 1 minute or 60 seconds
@@ -18,7 +20,7 @@ public interface TransactionsService {
      * @return
      */
     default boolean isOlderTransaction(Transaction transaction, Instant now) {
-        return transaction.getTimestamp().isAfter(now.minus(60, ChronoUnit.SECONDS));
+        return transaction.getTimestamp().isAfter(now.minus(60, ChronoUnit.HOURS));
     }
 
     /**
@@ -42,6 +44,7 @@ public interface TransactionsService {
             transaction.setBigAmount(new BigDecimal(transaction.getAmount()));
             return true;
         } catch (Exception e) {
+            e.printStackTrace();
             return false;
         }
     }

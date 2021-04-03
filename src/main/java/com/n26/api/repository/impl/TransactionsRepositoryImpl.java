@@ -2,48 +2,32 @@ package com.n26.api.repository.impl;
 
 import com.n26.api.model.Transaction;
 import com.n26.api.repository.TransactionsRepository;
-import lombok.Getter;
+import com.n26.api.utils.Cache;
 import org.springframework.stereotype.Repository;
 
 import java.lang.ref.SoftReference;
+import java.time.Instant;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentSkipListMap;
-import java.util.concurrent.Delayed;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.LongAdder;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 @Repository("TransactionsRepository")
 public class TransactionsRepositoryImpl implements TransactionsRepository {
 
-
+    private Cache<Long, Transaction> inMemoryCache = new Cache<>();
 
     @Override
-    public void save(Transaction transaction) {
-
+    public void save(Instant now, Transaction transaction) {
+        System.out.println("Cache before: "+inMemoryCache.size());
+        inMemoryCache.put(now.toEpochMilli(), transaction);
+        System.out.println("Cache after: "+inMemoryCache.size());
     }
 
-    @Getter
-    private static class Cache implements Delayed {
-
-        private final Long key;
-        private SoftReference<List<Transaction>> reference;
-        private final Long expiryTime;
-
-        public Cache(Long key, SoftReference<List<Transaction>> reference, Long expiryTime) {
-            this.key = key;
-            this.reference = reference;
-            this.expiryTime = expiryTime;
-        }
-
-        @Override
-        public long getDelay(TimeUnit unit) {
-            return unit.convert(expiryTime - System.currentTimeMillis(), TimeUnit.MILLISECONDS);
-        }
-
-        @Override
-        public int compareTo(Delayed o) {
-            return Long.compare(expiryTime, ((Cache) o).expiryTime);
-        }
+    @Override
+    public void removeAll() {
+        System.out.println("Before delete: "+inMemoryCache.size());
+        inMemoryCache.clear();
+        System.out.println("After delete: "+inMemoryCache.size());
     }
 }
