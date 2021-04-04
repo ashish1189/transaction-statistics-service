@@ -4,6 +4,7 @@ import com.n26.api.model.Transaction;
 import com.n26.api.model.TransactionsStatistics;
 import com.n26.api.repository.TransactionsRepository;
 import com.n26.api.service.StatisticService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,6 +13,7 @@ import java.math.RoundingMode;
 import java.util.Comparator;
 import java.util.List;
 
+@Slf4j
 @Service
 public class StatisticServiceImpl implements StatisticService {
     @Autowired
@@ -20,24 +22,26 @@ public class StatisticServiceImpl implements StatisticService {
     @Override
     public TransactionsStatistics getTransactionStatistics() {
 
+        log.info("Retrieving all in memory transactios");
         List<Transaction> transactions = transactionsRepository.getTransactions();
-        TransactionsStatistics transactionStatistics = new TransactionsStatistics();
+        TransactionsStatistics transactionsStatistics = new TransactionsStatistics();
 
         if (transactions == null || transactions.isEmpty())
-            return transactionStatistics;
+            return transactionsStatistics;
 
+        log.info("Creating aggregated statistics for the transactions");
         BigDecimal sum = transactions
                 .stream()
                 .map(Transaction::getBigAmount)
                 .reduce(BigDecimal.ZERO, BigDecimal::add)
                 .setScale(2, BigDecimal.ROUND_HALF_UP);
 
-        transactionStatistics.setSum(sum.toString());
+        transactionsStatistics.setSum(sum.toString());
 
-        transactionStatistics.setAvg(sum.
+        transactionsStatistics.setAvg(sum.
                 divide(new BigDecimal(transactions.size()), RoundingMode.HALF_UP).toString());
 
-        transactionStatistics.setMax(transactions
+        transactionsStatistics.setMax(transactions
                 .stream()
                 .map(Transaction::getBigAmount)
                 .max(Comparator.naturalOrder())
@@ -45,7 +49,7 @@ public class StatisticServiceImpl implements StatisticService {
                 .setScale(2, BigDecimal.ROUND_HALF_UP)
                 .toString());
 
-        transactionStatistics.setMin(transactions
+        transactionsStatistics.setMin(transactions
                 .stream()
                 .map(Transaction::getBigAmount)
                 .min(Comparator.naturalOrder())
@@ -53,8 +57,9 @@ public class StatisticServiceImpl implements StatisticService {
                 .setScale(2, BigDecimal.ROUND_HALF_UP)
                 .toString());
 
-        transactionStatistics.setCount(transactions.size());
+        transactionsStatistics.setCount(transactions.size());
 
-        return transactionStatistics;
+        log.info("transactionsStatistics :: {}", transactionsStatistics);
+        return transactionsStatistics;
     }
 }

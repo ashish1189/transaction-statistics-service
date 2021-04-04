@@ -4,13 +4,13 @@ FROM adoptopenjdk/openjdk11:latest
 LABEL author = "Ashish Deshpande"
 LABEL email = "ashishdeshpande123@gmail.com"
 LABEL description = "Transaction statistics service is ReST API to to calculate realtime \
-                     statistics for the last 60 seconds of transactions. "
+                     statistics for the last 60 seconds of transactions."
 
 #Landing directory for app.jar
 RUN mkdir /home/app
 
 # Environment port
-EXPOSE 9093
+EXPOSE 9091
 
 #Add app.jar from local to destination in container
 ADD target/coding-challenge-1.0.3.jar /home/app/coding-challenge-1.0.3.jar

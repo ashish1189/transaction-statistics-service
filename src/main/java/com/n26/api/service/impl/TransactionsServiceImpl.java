@@ -18,12 +18,14 @@ public class TransactionsServiceImpl implements TransactionsService {
 
     @Override
     public ResponseEntity<Void> saveTransaction(Transaction transaction) {
+        log.info("Saving transaction to in memory cache");
         transactionsRepository.save(transaction);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @Override
     public ResponseEntity<Void> deleteTransactions() {
+        log.info("Deleting all transactions from in memory cache");
         transactionsRepository.removeAll();
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
