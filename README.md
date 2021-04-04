@@ -7,6 +7,7 @@ RESTful API to to calculate realtime statistics for the last 60 seconds of trans
 
 ### Method
 * `POST` | `DELETE`
+    
     ####Create Transactions
     `POST /transactions` endpoint is called to create a new transaction. It executes in constant time and memory (O(1)).
   
@@ -39,6 +40,7 @@ RESTful API to to calculate realtime statistics for the last 60 seconds of trans
 
 ### Method
 * `GET`
+    
     ####Get realtime statistics
     `GET /statistics` endpoint returns the statistics based on the transactions that happened in the last 60 seconds. It MUST execute in constant time and memory (O(1)).
   
