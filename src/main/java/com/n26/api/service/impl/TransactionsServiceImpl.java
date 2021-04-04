@@ -9,8 +9,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.time.Instant;
-
 @Slf4j
 @Service
 public class TransactionsServiceImpl implements TransactionsService {
@@ -19,8 +17,8 @@ public class TransactionsServiceImpl implements TransactionsService {
     TransactionsRepository transactionsRepository;
 
     @Override
-    public ResponseEntity<Void> saveTransaction(Instant now, Transaction transaction) {
-        transactionsRepository.save(now, transaction);
+    public ResponseEntity<Void> saveTransaction(Transaction transaction) {
+        transactionsRepository.save(transaction);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 

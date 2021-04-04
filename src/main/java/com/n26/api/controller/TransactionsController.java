@@ -31,7 +31,7 @@ public class TransactionsController {
         else if (!transactionsService.isValidAmount(transaction))
             return new ResponseEntity<>(HttpStatus.UNPROCESSABLE_ENTITY);
         else
-            return transactionsService.saveTransaction(now, transaction);
+            return transactionsService.saveTransaction(transaction);
     }
 
     @DeleteMapping(value = "/transactions", produces = MediaType.APPLICATION_JSON_VALUE)

@@ -9,7 +9,7 @@ import java.time.temporal.ChronoUnit;
 
 public interface TransactionsService {
 
-    ResponseEntity<Void> saveTransaction(Instant now, Transaction transaction);
+    ResponseEntity<Void> saveTransaction(Transaction transaction);
 
     ResponseEntity<Void> deleteTransactions();
 
