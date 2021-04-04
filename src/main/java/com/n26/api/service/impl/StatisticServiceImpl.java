@@ -59,7 +59,6 @@ public class StatisticServiceImpl implements StatisticService {
 
         transactionsStatistics.setCount(transactions.size());
 
-        log.info("transactionsStatistics :: {}", transactionsStatistics);
         return transactionsStatistics;
     }
 }
