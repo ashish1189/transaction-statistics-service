@@ -23,6 +23,16 @@ public class Transaction {
     @JsonProperty("timestamp")
     private Instant timestamp;
 
+    public Transaction(String amount, Instant timestamp) {
+        this.amount = amount;
+        this.timestamp = timestamp;
+    }
+
+    public Transaction(BigDecimal bigAmount, Instant timestamp) {
+        this.bigAmount = bigAmount;
+        this.timestamp = timestamp;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

@@ -1,12 +1,13 @@
 package com.n26.api.model;
 
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 @Getter
 @Setter
 @ToString
+@EqualsAndHashCode
+@AllArgsConstructor
+@NoArgsConstructor
 public class TransactionsStatistics {
 
     private String sum = "0.00";
