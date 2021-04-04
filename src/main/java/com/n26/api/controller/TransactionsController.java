@@ -24,7 +24,6 @@ public class TransactionsController {
     @PostMapping(value = "/transactions", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Void> createTransactions (@RequestBody Transaction transaction) {
         Instant now = Instant.now();
-
         if (!transactionsService.isOlderTransaction(transaction, now))
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         else if (transactionsService.isFutureTransaction(transaction, now))

@@ -5,7 +5,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import lombok.*;
 
-import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.Instant;
 
@@ -16,8 +15,7 @@ import java.time.Instant;
 @ToString
 @JsonPropertyOrder({ "amount", "timestamp" })
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
-public class Transaction implements Serializable {
-    private static final long serialVersionUID = 3754391163560212887L;
+public class Transaction {
 
     @JsonProperty("amount")
     private String amount;

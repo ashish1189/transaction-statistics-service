@@ -1,11 +1,11 @@
 package com.n26.api.utils;
 
+import com.n26.api.model.Transaction;
+import lombok.Getter;
 import lombok.ToString;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import static com.n26.api.utils.Constants.TIME_TO_LIVE;
 
@@ -16,12 +16,15 @@ public class Cache<K, V> {
     private HashMap<K, V> cacheMap;
 
     @ToString
-    private class CachedObject {
-        public long lastAccessed = System.currentTimeMillis();
+    @Getter
+    private class CachedObject<V> {
+        public long insertedAt = System.currentTimeMillis();
         public V value;
 
         protected CachedObject(V value) {
             this.value = value;
+            if (value instanceof Transaction)
+                this.insertedAt = ((Transaction) value).getTimestamp().toEpochMilli();
         }
     }
 
@@ -51,12 +54,9 @@ public class Cache<K, V> {
     // Synchronised GET method
     public V get(K key) {
         synchronized (cacheMap) {
-            CachedObject c = (CachedObject) cacheMap.get(key);
+            CachedObject<V> c = (CachedObject) cacheMap.get(key);
 
-            if (c == null)
-                return null;
-            else
-                return c.value;
+            return c == null ? null : c.value;
         }
     }
 
@@ -81,6 +81,16 @@ public class Cache<K, V> {
         }
     }
 
+    // Synchronised Values method
+    public Collection<V> values() {
+        synchronized (cacheMap) {
+            return cacheMap
+                    .values()
+                    .stream()
+                    .map(cache -> ((CachedObject<V>) cache).getValue())
+                    .collect(Collectors.toList());
+        }
+    }
     // Synchronised CLEANUP method
     public void cleanup() {
 
@@ -98,7 +108,7 @@ public class Cache<K, V> {
                 Map.Entry<K, V> entry = itr.next();
                 key = entry.getKey();
                 cached = entry.getValue();
-                if (cached != null && (now > (((CachedObject) cached).lastAccessed + timeToLive))) {
+                if (cached != null && (now > (((CachedObject) cached).insertedAt + timeToLive))) {
                     deleteKey.add(key);
                 }
             }

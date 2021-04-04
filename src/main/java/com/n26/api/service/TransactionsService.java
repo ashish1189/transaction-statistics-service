@@ -20,7 +20,7 @@ public interface TransactionsService {
      * @return
      */
     default boolean isOlderTransaction(Transaction transaction, Instant now) {
-        return transaction.getTimestamp().isAfter(now.minus(60, ChronoUnit.HOURS));
+        return transaction.getTimestamp().isAfter(now.minus(60, ChronoUnit.SECONDS));
     }
 
     /**
@@ -44,7 +44,6 @@ public interface TransactionsService {
             transaction.setBigAmount(new BigDecimal(transaction.getAmount()));
             return true;
         } catch (Exception e) {
-            e.printStackTrace();
             return false;
         }
     }
